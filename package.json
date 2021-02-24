@@ -5,6 +5,7 @@
   "author": "Thomas Foydel",
   "main": "index.js",
   "scripts": {
+    "test": "mocha",
     "client-install": "npm install --prefix client",
     "start": "node index.js",
     "server": "nodemon index.js",
@@ -27,6 +28,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^8.3.0",
+    "mongoose": "^5.11.17",
     "nodemon": "^2.0.7",
     "socket.io": "^3.1.1"
   },
