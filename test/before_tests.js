@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
+mongoose.Promise = global.Promise;
+
 mongoose.connect(process.env.TEST_DB, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 });
 
-before(() => {
+before((done) => {
   mongoose.connection
-    .once('open', () => {
-      console.log('up and running');
-    })
+    .once('open', () => done())
     .on('error', (err) => {
       console.log('db connection error: ', err);
     });
