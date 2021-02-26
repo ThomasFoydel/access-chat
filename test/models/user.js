@@ -1,13 +1,26 @@
-const User = require('../models/User');
+const mongoose = require('mongoose');
 const assert = require('assert');
 const bcrypt = require('bcryptjs');
+const User = require('../../models/User');
+
 const exampleUserData = {
   name: 'Reginald',
   email: 'reginald@example.com',
   password: 'ReginaldRules1994!!',
 };
+const exampleFriendData = {
+  name: 'joe10000000',
+  email: 'joerheinhardt@someexample.com',
+  password: 'reginaldsFriend',
+};
 
 describe('User model', () => {
+  beforeEach((done) => {
+    mongoose.connection.collections.users.drop(() => {
+      done();
+    });
+  });
+
   it('saves new user to db', (done) => {
     const newUser = new User(exampleUserData);
     newUser
@@ -36,17 +49,14 @@ describe('User model', () => {
 
   it('rejects new user with name less than 8 characters', (done) => {
     const newUser = new User({ ...exampleUserData, name: '2short' });
-    newUser
-      .save()
-      .then()
-      .catch((err) => {
-        assert(
-          String(err.errors.name).includes(
-            'name must be between 8 and 16 characters'
-          )
-        );
-        done();
-      });
+    newUser.save().catch((err) => {
+      assert(
+        String(err.errors.name).includes(
+          'name must be between 8 and 16 characters'
+        )
+      );
+      done();
+    });
   });
   it('rejects new user with name less more than 16 characters', (done) => {
     const newUser = new User({
@@ -115,11 +125,7 @@ describe('User model', () => {
 
   it('should allow friends ref ids to be added to friends array', (done) => {
     const reginald = new User(exampleUserData);
-    const joe = new User({
-      name: 'joe10000000',
-      email: 'joerheinhardt@someexample.com',
-      password: 'reginaldsFriend',
-    });
+    const joe = new User(exampleFriendData);
     reginald
       .save()
       .then(() => joe.save())

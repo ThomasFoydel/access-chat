@@ -14,9 +14,3 @@ before((done) => {
       console.log('db connection error: ', err);
     });
 });
-
-beforeEach((done) => {
-  mongoose.connection.collections.users.drop(() => {
-    done();
-  });
-});
