@@ -38,8 +38,8 @@ describe('message model', () => {
   });
 
   beforeEach((done) => {
-    if (mongoose.connection.collections.friendRequests) {
-      mongoose.connection.collections.friendRequests.drop(() => {
+    if (mongoose.connection.collections.friendrequests) {
+      mongoose.connection.collections.friendrequests.drop(() => {
         done();
       });
     } else {
