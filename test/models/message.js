@@ -20,32 +20,39 @@ describe('message model', () => {
   let exampleMessage;
 
   before((done) => {
-    userOne = new User(exampleUserData);
-    userTwo = new User(exampleFriendData);
-    userOne
-      .save()
-      .then(() => userTwo.save())
-      .then(() => {
-        exampleMessage = {
-          sender: userOne._id,
-          receiver: userTwo._id,
-          inConvo: [userOne._id, userTwo._id],
-          content: 'did you drink my arnold palmer?',
-        };
-        done();
-      });
+    mongoose.connection.collections.users.drop(() => {
+      userOne = new User(exampleUserData);
+      userTwo = new User(exampleFriendData);
+      userOne
+        .save()
+        .then(() => userTwo.save())
+        .then(() => {
+          exampleMessage = {
+            sender: userOne._id,
+            receiver: userTwo._id,
+            participants: [userOne._id, userTwo._id],
+            content: 'did you drink my arnold palmer?',
+          };
+          done();
+        });
+    });
   });
 
   beforeEach((done) => {
-    mongoose.connection.collections.users.drop(() => {
-      if (mongoose.connection.collections.messages) {
-        mongoose.connection.collections.messages.drop(() => {
-          done();
-        });
-      } else {
+    if (mongoose.connection.collections.messages) {
+      mongoose.connection.collections.messages.drop(() => {
         done();
-      }
-    });
+      });
+    }
+    // mongoose.connection.collections.users.drop(() => {
+    //   if (mongoose.connection.collections.messages) {
+    //     mongoose.connection.collections.messages.drop(() => {
+    //       done();
+    //     });
+    //   } else {
+    //     done();
+    //   }
+    // });
   });
 
   it('should save new messages', (done) => {
@@ -63,8 +70,8 @@ describe('message model', () => {
         result.sender === exampleMessage.sender &&
           result.receiver === exampleMessage.receiver &&
           result.content === exampleMessage.content &&
-          result.inConvo.includes(exampleMessage.sender) &&
-          result.inConvo.includes(exampleMessage.receiver)
+          result.participants.includes(exampleMessage.sender) &&
+          result.participants.includes(exampleMessage.receiver)
       );
       done();
     });

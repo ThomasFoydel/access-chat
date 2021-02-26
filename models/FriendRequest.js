@@ -1,28 +1,29 @@
 const mongoose = require('mongoose');
 
-const messageSchema = mongoose.Schema(
+const friendRequestSchema = mongoose.Schema(
   {
     sender: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      required: true,
     },
     receiver: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      required: true,
     },
     participants: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'User',
+      required: true,
     },
-    content: {
+    status: {
       type: String,
-      validate: {
-        validator: (c) => c.length < 500,
-        message: 'must be less than 500 characters',
-      },
+      default: 'pending',
+      required: true,
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Message', messageSchema);
+module.exports = mongoose.model('FriendRequest', friendRequestSchema);
