@@ -1,9 +1,11 @@
-const { expect } = require('chai');
 const chai = require('chai');
+const { expect } = chai;
 const chaiHttp = require('chai-http');
-const server = require('../../index.js');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+
+const server = require('../../index.js');
+const User = require('../../models/User.js');
 
 chai.use(chaiHttp);
 
@@ -14,15 +16,23 @@ const exampleRegisterData = {
   confirmpassword: 'Definitelycedric1988!$',
 };
 
+const exampleLoginData = {
+  email: exampleRegisterData.email,
+  password: exampleRegisterData.password,
+};
+
 describe('User routes', () => {
   describe('POST /api/user/register', () => {
-    beforeEach((done) => {
-      if (mongoose.connection.collections.users)
-        mongoose.connection.collections.users.drop(() => {
-          done();
-        });
+    beforeEach(async () => {
+      const collections = await mongoose.connection.db.collections();
+      for (let collection of collections) {
+        if (collection.drop) {
+          await collection.drop();
+        }
+      }
     });
-    it('should reject registration when name is less than 8 characters', () => {
+
+    it('should reject registration when name is less than 8 characters', (done) => {
       chai
         .request(server)
         .post('/api/user/register')
@@ -35,6 +45,7 @@ describe('User routes', () => {
             'Name must be between 8 and 16 characters'
           );
           expect(response.statusCode).to.equal(400);
+          done();
         });
     });
 
@@ -129,6 +140,58 @@ describe('User routes', () => {
             exampleRegisterData.password
           );
           expect(response.body.name).to.equal(exampleRegisterData.name);
+          done();
+        });
+    });
+  });
+
+  describe('POST /api/user/login', () => {
+    before(() => {
+      User.create(exampleRegisterData).then(() => done());
+    });
+    it('should log in a user', (done) => {
+      chai
+        .request(server)
+        .post('/api/user/login')
+        .send(exampleLoginData)
+        .end(async (err, response) => {
+          //   console.log(response.body);
+          expect(response.statusCode).to.equal(200);
+          expect(response.body.user).to.exist();
+          expect(response.body.token).to.exist();
+          done();
+        });
+    });
+
+    it('should reject log in attempt with incorrect password', (done) => {
+      chai
+        .request(server)
+        .post('/api/user/login')
+        .send({
+          ...exampleLoginData,
+          password: exampleLoginData.password + 'wrongtext',
+        })
+        .end(async (err, response) => {
+          //   console.log(response.body);
+          expect(response.statusCode).to.equal(401);
+          expect(response.body.err).to.equal('Incorrect Auth Info');
+          expect(response.body.token).to.exist();
+          done();
+        });
+    });
+    it('should reject log in attempt with incorrect email', (done) => {
+      chai
+        .request(server)
+        .post('/api/user/login')
+        .send({
+          ...exampleLoginData,
+          email: exampleLoginData.email + 'wrongtext',
+        })
+        .end(async (err, response) => {
+          //   console.log(response.body);
+          expect(response.statusCode).to.equal(401);
+          expect(response.body.err).to.equal('Incorrect Auth Info');
+          expect(response.body.token).to.exist();
           done();
         });
     });

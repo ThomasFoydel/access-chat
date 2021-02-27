@@ -5,6 +5,7 @@ const API = require('../controller/API');
 
 router.post('/register', async (req, res) => {
   let { email, name, password, confirmpassword } = req.body || {};
+
   let allFieldsExist = email && name && password && confirmpassword;
   if (!allFieldsExist) {
     return res.status(400).send({ err: 'All fields required' });

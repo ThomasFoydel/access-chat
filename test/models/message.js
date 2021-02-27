@@ -44,15 +44,6 @@ describe('message model', () => {
         done();
       });
     }
-    // mongoose.connection.collections.users.drop(() => {
-    //   if (mongoose.connection.collections.messages) {
-    //     mongoose.connection.collections.messages.drop(() => {
-    //       done();
-    //     });
-    //   } else {
-    //     done();
-    //   }
-    // });
   });
 
   it('should save new messages', (done) => {
