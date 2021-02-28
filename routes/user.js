@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const API = require('../controller/API');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 router.post('/register', async (req, res) => {
   let { email, name, password, confirmpassword } = req.body || {};
@@ -46,6 +48,48 @@ router.post('/register', async (req, res) => {
       res
         .status(500)
         .send({ err: 'Database is down, we are working to fix this' })
+    );
+});
+
+router.post('/login', async (req, res) => {
+  if (!req.body.email || !req.body.password) {
+    return res.send({ err: 'all fields required' });
+  }
+
+  User.findOne({ email: req.body.email })
+    .then(async (user) => {
+      if (!user) {
+        return res.status(400).send({ err: 'Incorrect auth info' });
+      }
+      const passwordsMatch = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (passwordsMatch) {
+        const token = jwt.sign(
+          {
+            tokenUser: {
+              userId: user._id,
+              email: user.email,
+            },
+          },
+          process.env.SECRET,
+          { expiresIn: '1000hr' }
+        );
+        const userInfo = {
+          name: user.name,
+          email: user.email,
+          id: user._id,
+        };
+        res.status(200).send({ token, user: userInfo });
+      } else {
+        return res.status(401).send({ err: 'Incorrect auth info' });
+      }
+    })
+    .catch(() =>
+      res.status(500).send({
+        err: 'Database is down, we are working to fix this',
+      })
     );
 });
 

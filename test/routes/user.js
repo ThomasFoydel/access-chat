@@ -155,10 +155,9 @@ describe('User routes', () => {
         .post('/api/user/login')
         .send(exampleLoginData)
         .end(async (err, response) => {
-          //   console.log(response.body);
           expect(response.statusCode).to.equal(200);
-          expect(response.body.user).to.exist();
-          expect(response.body.token).to.exist();
+          expect(response.body.user).to.exist;
+          expect(response.body.token).to.exist;
           done();
         });
     });
@@ -172,10 +171,9 @@ describe('User routes', () => {
           password: exampleLoginData.password + 'wrongtext',
         })
         .end(async (err, response) => {
-          //   console.log(response.body);
           expect(response.statusCode).to.equal(401);
-          expect(response.body.err).to.equal('Incorrect Auth Info');
-          expect(response.body.token).to.exist();
+          expect(response.body.err).to.equal('Incorrect auth info');
+          expect(response.body.token).to.not.exist;
           done();
         });
     });
@@ -188,10 +186,9 @@ describe('User routes', () => {
           email: exampleLoginData.email + 'wrongtext',
         })
         .end(async (err, response) => {
-          //   console.log(response.body);
-          expect(response.statusCode).to.equal(401);
-          expect(response.body.err).to.equal('Incorrect Auth Info');
-          expect(response.body.token).to.exist();
+          expect(response.statusCode).to.equal(400);
+          expect(response.body.err).to.equal('Incorrect auth info');
+          expect(response.body.token).to.not.exist;
           done();
         });
     });
