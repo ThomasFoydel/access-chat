@@ -1,8 +1,13 @@
 import React from 'react';
-import './App.scss';
+import './App.css';
+import Auth from 'Components/Auth/Auth';
 
 function App() {
-  return <div className='App'></div>;
+  return (
+    <div className='App'>
+      <Auth />
+    </div>
+  );
 }
 
 export default App;

@@ -4,31 +4,30 @@ import { Button } from 'reakit/Button';
 import { css } from '@emotion/css';
 import { Level, H } from 'react-accessible-headings';
 import PropTypes from 'prop-types';
-
 import InputGroup from 'Components/InputGroup/InputGroup';
 
-const Login = ({
-  props: { loginForm, setLoginForm, loginRequest, setShow },
+const Register = ({
+  props: { registerForm, setRegisterForm, registerRequest, setShow },
 }) => {
-  const handleLoginForm = ({ target: { id, value } }) => {
-    setLoginForm((form) => ({ ...form, [id]: value }));
+  const handleRegisterForm = ({ target: { id, value } }) => {
+    setRegisterForm((form) => ({ ...form, [id]: value }));
   };
 
   return (
-    <form className={loginCss}>
-      <H className='header'>Login</H>
+    <form className={registerCss}>
+      <H className='header'>Register</H>
       <Level>
         <InputGroup
           props={{
-            handleForm: handleLoginForm,
-            form: loginForm,
-            inputs: loginInputs,
+            handleForm: handleRegisterForm,
+            form: registerForm,
+            inputs: registerInputs,
           }}
         />
 
-        <Button onClick={loginRequest}>Submit</Button>
-        <Button className='login' onClick={() => setShow('register')}>
-          Sign up
+        <Button onClick={registerRequest}>Submit</Button>
+        <Button className='login' onClick={() => setShow('login')}>
+          I already have an account
         </Button>
       </Level>
     </form>
@@ -38,7 +37,7 @@ const Login = ({
 // $medium: 768px;
 // $large: 992px;
 
-const loginCss = css`
+const registerCss = css`
   color: white;
   border: 2px solid white;
   width: 90vw;
@@ -93,7 +92,8 @@ const loginCss = css`
   //   }
 `;
 
-const loginInputs = [
+const registerInputs = [
+  { placeholder: 'name', id: 'name', name: 'name', type: 'text' },
   { placeholder: 'email', id: 'email', name: 'email', type: 'text' },
   {
     placeholder: 'password',
@@ -101,18 +101,26 @@ const loginInputs = [
     name: 'password',
     type: 'password',
   },
+  {
+    placeholder: 'confirm password',
+    id: 'confirmpassword',
+    name: 'confirm password',
+    type: 'password',
+  },
 ];
 
-Login.propTypes = {
+Register.propTypes = {
   props: PropTypes.shape({
-    loginForm: PropTypes.shape({
+    registerForm: PropTypes.shape({
       email: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
       password: PropTypes.string.isRequired,
+      confirmpassword: PropTypes.string.isRequired,
     }),
-    setLoginForm: PropTypes.func.isRequired,
-    loginRequest: PropTypes.func.isRequired,
+    setRegisterForm: PropTypes.func.isRequired,
+    registerRequest: PropTypes.func.isRequired,
     setShow: PropTypes.func.isRequired,
   }),
 };
 
-export default Login;
+export default Register;
