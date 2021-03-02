@@ -1,7 +1,14 @@
 @font-face {
   font-family: 'OpenDyslexic';
+  font-weight: normal;
   src: local('OpenDyslexic'),
     url(./fonts/OpenDyslexic-Regular.otf) format('opentype');
+}
+@font-face {
+  font-family: 'OpenDyslexic';
+  font-weight: bold;
+  src: local('OpenDyslexic'),
+    url(./fonts/OpenDyslexic-Bold.otf) format('opentype');
 }
 
 *,
@@ -10,6 +17,7 @@
   margin: 0;
   padding: 0;
   box-sizing: inherit;
+  font-family: inherit;
 }
 
 html {
@@ -29,4 +37,8 @@ body {
   margin-left: 50%;
   transform: translateX(-50%);
   text-align: center;
+}
+
+button {
+  cursor: pointer;
 }

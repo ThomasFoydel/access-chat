@@ -30,7 +30,7 @@ describe('User model', () => {
         done();
       })
       .catch((err) => {
-        console.log('err: ', err);
+        console.log('saves newUser test err: ', err);
       });
   });
 
@@ -43,7 +43,7 @@ describe('User model', () => {
         done();
       })
       .catch((err) => {
-        console.log('err: ', err);
+        console.log('saves newUser with name test err: ', err);
       });
   });
 

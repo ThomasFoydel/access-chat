@@ -53,26 +53,30 @@ const loginCss = css`
 
   button {
     font-size: 2.5rem;
-    padding: 1rem 3rem;
-    margin: 2rem;
+    padding: 0.5rem 2rem;
+    margin-top: 2rem;
     background: #d2d2d2;
     border-radius: 0.3rem;
     border-color: #d2d2d2;
+    font-weight: bold;
   }
   label {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
   .header {
     font-size: 4rem;
-    letter-spacing: 0.2rem;
+    letter-spacing: 0.3rem;
+    text-align: center;
+    background: red;
+    padding: 0 0.3rem;
   }
 
   input {
     display: block;
     width: 90%;
     border-radius: 0.2rem;
-    padding: 0.5em 0.75em;
-    font-size: 2rem;
+    padding: 0.25em 0.5em;
+    font-size: 1.8rem;
     border: 1px solid rgba(0, 0, 0, 0.25);
     color: #4d4d4d;
     box-sizing: border-box;
@@ -86,6 +90,7 @@ const loginCss = css`
   .login {
     font-size: 1.2rem;
     padding: 1rem;
+    margin-top: 1rem;
   }
 
   //   @media (min-width: 576px) {

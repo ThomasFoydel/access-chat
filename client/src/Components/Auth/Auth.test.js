@@ -22,10 +22,17 @@ describe('Trainer settings page', () => {
 
   beforeEach(async () => {
     axios.post = jest.fn((url, body) => {
-      console.log({ url, body });
       if (url === 'api/user/register' && body.email === exampleUser.email) {
         return Promise.resolve({
           data: { user: exampleUser, token: '37#b4%fdhrd4#l$ik%$3^3gh54k@3' },
+        });
+      }
+      if (url === 'api/user/login' && body.email === exampleUser.email) {
+        return Promise.resolve({
+          data: {
+            user: exampleUser,
+            token: '37#b4%fdhrd4#l$ik%$3^3gh54k@3',
+          },
         });
       }
     });
@@ -50,6 +57,19 @@ describe('Trainer settings page', () => {
     userEvent.click(btn);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     expect(axios.post).toHaveBeenCalledTimes(1);
-    waitFor(() => expect(screen.findByText(`Welcome, ${exampleUser.name}`)));
+  });
+
+  it('logs a user in', async () => {
+    const signUpBtn = screen.getByText('I already have an account');
+    userEvent.click(signUpBtn);
+    const inputs = screen.getAllByTestId('input');
+
+    userEvent.type(inputs[0], exampleUser.email);
+    userEvent.type(inputs[1], exampleUser.password);
+
+    const btn = screen.getByText('Submit');
+    userEvent.click(btn);
+    await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
+    expect(axios.post).toHaveBeenCalledTimes(1);
   });
 });

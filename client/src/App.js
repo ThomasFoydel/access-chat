@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import Auth from 'Components/Auth/Auth';
 
+import NavBar from 'Components/NavBar/NavBar';
 function App() {
   return (
     <div className='App'>
-      <Auth />
+      <NavBar />
     </div>
   );
 }

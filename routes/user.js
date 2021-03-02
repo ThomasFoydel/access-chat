@@ -42,7 +42,8 @@ router.post('/register', async (req, res) => {
 
   API.createUser({ email, name, password })
     .then((result) => {
-      res.status(201).send(result);
+      const copy = { ...result._doc };
+      res.status(201).send(copy);
     })
     .catch(() =>
       res

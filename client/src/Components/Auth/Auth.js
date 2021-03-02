@@ -3,16 +3,17 @@ import axios from 'axios';
 import Login from './Login';
 import Register from './Register/Register';
 import { connect } from 'react-redux';
-import { login } from 'redux/auth/actions';
-
+import { login, logout } from 'redux/auth/actions';
+import { Button } from 'reakit/Button';
 import {
   useDialogState,
   Dialog,
   DialogDisclosure,
   DialogBackdrop,
 } from 'reakit/Dialog';
+import { persistor } from 'redux/store';
 
-const Auth = ({ login, loggedIn }) => {
+const Auth = ({ login, loggedIn, logout }) => {
   const [registerForm, setRegisterForm] = useState({
     email: '',
     name: '',
@@ -45,6 +46,7 @@ const Auth = ({ login, loggedIn }) => {
     axios
       .post('api/user/login', loginForm)
       .then(({ data }) => login(data))
+
       .catch(
         ({
           response: {
@@ -59,7 +61,11 @@ const Auth = ({ login, loggedIn }) => {
 
   return (
     <>
-      <DialogDisclosure {...authDialog}>Sign in Sign up</DialogDisclosure>
+      {loggedIn ? (
+        <Button onClick={() => persistor.purge()}>Log Out</Button>
+      ) : (
+        <DialogDisclosure {...authDialog}>Sign in Sign up</DialogDisclosure>
+      )}
       <DialogBackdrop {...authDialog}>
         <Dialog {...authDialog} aria-label='Authentication'>
           {show === 'register' ? (
@@ -87,5 +93,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   login: (user) => dispatch(login(user)),
+  logout: () => dispatch(logout()),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Auth);
