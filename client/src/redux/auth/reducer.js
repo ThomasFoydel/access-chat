@@ -1,12 +1,11 @@
 import { types } from './types.js';
-import { purgeStoredState, PURGE } from 'redux-persist';
+import { PURGE } from 'redux-persist';
 const INITIAL_STATE = {
-  token: null,
+  token: '',
   loggedIn: false,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
-  console.log({ state, action });
   switch (action.type) {
     case types.LOGIN:
       localStorage.setItem('access-chat-token', action.payload.token);

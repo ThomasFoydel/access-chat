@@ -3,8 +3,9 @@ import axios from 'axios';
 import Login from './Login';
 import Register from './Register/Register';
 import { connect } from 'react-redux';
-import { login, logout } from 'redux/auth/actions';
+import { login } from 'redux/auth/actions';
 import { Button } from 'reakit/Button';
+import { css } from '@emotion/css';
 import {
   useDialogState,
   Dialog,
@@ -13,7 +14,7 @@ import {
 } from 'reakit/Dialog';
 import { persistor } from 'redux/store';
 
-const Auth = ({ login, loggedIn, logout }) => {
+const Auth = ({ login, loggedIn }) => {
   const [registerForm, setRegisterForm] = useState({
     email: '',
     name: '',
@@ -26,11 +27,17 @@ const Auth = ({ login, loggedIn, logout }) => {
   });
   const [show, setShow] = useState('register');
   const [err, setErr] = useState('');
+  const authDialog = useDialogState();
+
+  const setAuth = (user) => {
+    login(user);
+    authDialog.hide();
+  };
 
   const registerRequest = () => {
     axios
       .post('api/user/register', registerForm)
-      .then(({ data }) => login(data))
+      .then(({ data }) => setAuth(data))
       .catch(
         ({
           response: {
@@ -45,7 +52,7 @@ const Auth = ({ login, loggedIn, logout }) => {
   const loginRequest = () => {
     axios
       .post('api/user/login', loginForm)
-      .then(({ data }) => login(data))
+      .then(({ data }) => setAuth(data))
 
       .catch(
         ({
@@ -57,14 +64,17 @@ const Auth = ({ login, loggedIn, logout }) => {
         }
       );
   };
-  const authDialog = useDialogState();
 
   return (
-    <>
+    <li className={authCss}>
       {loggedIn ? (
-        <Button onClick={() => persistor.purge()}>Log Out</Button>
+        <Button onClick={() => persistor.purge()} className='auth-btn'>
+          Log Out
+        </Button>
       ) : (
-        <DialogDisclosure {...authDialog}>Sign in Sign up</DialogDisclosure>
+        <DialogDisclosure {...authDialog} className='auth-btn'>
+          Sign in
+        </DialogDisclosure>
       )}
       <DialogBackdrop {...authDialog}>
         <Dialog {...authDialog} aria-label='Authentication'>
@@ -75,17 +85,41 @@ const Auth = ({ login, loggedIn, logout }) => {
                 setRegisterForm,
                 registerRequest,
                 setShow,
+                close: authDialog.hide,
               }}
             />
           ) : (
-            <Login props={{ loginForm, setLoginForm, loginRequest, setShow }} />
+            <Login
+              props={{
+                loginForm,
+                setLoginForm,
+                loginRequest,
+                setShow,
+                close: authDialog.hide,
+              }}
+            />
           )}
           <div>{err}</div>
         </Dialog>
       </DialogBackdrop>
-    </>
+    </li>
   );
 };
+
+const authCss = css`
+  .backdrop {
+    max-width: 90%;
+    background: red;
+  }
+  .auth-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    &:hover {
+      background: red;
+    }
+  }
+`;
 
 const mapStateToProps = (state) => ({
   loggedIn: state.auth.loggedIn,
@@ -93,6 +127,5 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   login: (user) => dispatch(login(user)),
-  logout: () => dispatch(logout()),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Auth);

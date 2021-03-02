@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import InputGroup from 'Components/InputGroup/InputGroup';
 
 const Login = ({
-  props: { loginForm, setLoginForm, loginRequest, setShow },
+  props: { loginForm, setLoginForm, loginRequest, setShow, close },
 }) => {
   const handleLoginForm = ({ target: { id, value } }) => {
     setLoginForm((form) => ({ ...form, [id]: value }));
@@ -17,6 +17,9 @@ const Login = ({
   return (
     <form className={loginCss}>
       <H className='header'>Login</H>
+      <Button onClick={() => close()} className='close-btn'>
+        close
+      </Button>
       <Level>
         <InputGroup
           props={{
@@ -26,7 +29,9 @@ const Login = ({
           }}
         />
 
-        <Button onClick={loginRequest}>Submit</Button>
+        <Button onClick={loginRequest} className='submit-btn'>
+          Submit
+        </Button>
         <Button className='login' onClick={() => setShow('register')}>
           Sign up
         </Button>
@@ -41,7 +46,7 @@ const Login = ({
 const loginCss = css`
   color: white;
   border: 2px solid white;
-  width: 90vw;
+  width: 100vw;
   background: black;
   display: flex;
   flex-direction: column;
@@ -51,7 +56,7 @@ const loginCss = css`
   transform: translateX(-50%);
   padding: 2rem 1rem;
 
-  button {
+  .submit-btn {
     font-size: 2.5rem;
     padding: 0.5rem 2rem;
     margin-top: 2rem;
@@ -59,6 +64,11 @@ const loginCss = css`
     border-radius: 0.3rem;
     border-color: #d2d2d2;
     font-weight: bold;
+  }
+  .close-btn {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
   }
   label {
     font-size: 1.8rem;
@@ -117,6 +127,7 @@ Login.propTypes = {
     setLoginForm: PropTypes.func.isRequired,
     loginRequest: PropTypes.func.isRequired,
     setShow: PropTypes.func.isRequired,
+    close: PropTypes.func.isRequired,
   }),
 };
 

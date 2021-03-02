@@ -41,9 +41,24 @@ router.post('/register', async (req, res) => {
   }
 
   API.createUser({ email, name, password })
-    .then((result) => {
-      const copy = { ...result._doc };
-      res.status(201).send(copy);
+    .then((user) => {
+      const token = jwt.sign(
+        {
+          tokenUser: {
+            userId: user._id,
+            email: user.email,
+          },
+        },
+        process.env.SECRET,
+        { expiresIn: '1000hr' }
+      );
+      const userInfo = {
+        name: user.name,
+        email: user.email,
+        id: user._id,
+      };
+
+      res.status(201).send({ user: userInfo, token });
     })
     .catch(() =>
       res
@@ -82,7 +97,7 @@ router.post('/login', async (req, res) => {
           email: user.email,
           id: user._id,
         };
-        res.status(200).send({ token, user: userInfo });
+        res.status(200).send({ user: userInfo, token });
       } else {
         return res.status(401).send({ err: 'Incorrect auth info' });
       }
