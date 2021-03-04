@@ -1,5 +1,4 @@
 import React from 'react';
-// import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 
@@ -46,6 +45,8 @@ describe('Trainer settings page', () => {
     );
   });
 
+  afterEach(() => cleanup());
+
   it('registers a user', async () => {
     const inputs = screen.getAllByTestId('input');
     userEvent.type(inputs[0], exampleUser.name);
@@ -57,6 +58,44 @@ describe('Trainer settings page', () => {
     userEvent.click(btn);
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
     expect(axios.post).toHaveBeenCalledTimes(1);
+  });
+
+  it('register and auth navigable with tab', async () => {
+    expect(screen.getByText('Register'));
+    const inputs = screen.getAllByTestId('input');
+    userEvent.tab();
+    userEvent.tab();
+    userEvent.tab();
+    expect(inputs[0]).toHaveFocus();
+    userEvent.tab();
+    expect(inputs[1]).toHaveFocus();
+    userEvent.tab();
+    expect(inputs[2]).toHaveFocus();
+    userEvent.tab();
+    expect(inputs[3]).toHaveFocus();
+    userEvent.tab();
+    const submitBtn = screen.getByText('Submit');
+    expect(submitBtn).toHaveFocus();
+    userEvent.tab();
+    const goToLoginBtn = screen.getByText('I already have an account');
+    expect(goToLoginBtn).toHaveFocus();
+    userEvent.click(goToLoginBtn);
+    expect(screen.getByText('Login'));
+    const loginInputs = screen.getAllByTestId('input');
+    userEvent.tab();
+    userEvent.tab();
+    userEvent.tab();
+    expect(loginInputs[0]).toHaveFocus();
+    userEvent.tab();
+    expect(loginInputs[1]).toHaveFocus();
+    userEvent.tab();
+    const loginSubmitBtn = screen.getByText('Submit');
+    expect(loginSubmitBtn).toHaveFocus();
+    userEvent.tab();
+    const goToRegisterBtn = screen.getByText('Sign up');
+    expect(goToRegisterBtn).toHaveFocus();
+    userEvent.click(goToRegisterBtn);
+    expect(screen.getByText('Register'));
   });
 
   it('logs a user in', async () => {
