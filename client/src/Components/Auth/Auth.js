@@ -107,6 +107,7 @@ const Auth = ({ login, loggedIn }) => {
 };
 
 const authCss = css`
+  list-style: none;
   .backdrop {
     max-width: 90%;
     background: red;

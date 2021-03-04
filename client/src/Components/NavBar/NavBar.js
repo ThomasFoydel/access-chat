@@ -2,14 +2,21 @@ import React from 'react';
 import Auth from 'Components/Auth/Auth';
 import { Level, H } from 'react-accessible-headings';
 import { css } from '@emotion/css';
+import { Link } from 'react-router-dom';
+
 const NavBar = () => {
   return (
     <nav className={navCss}>
       <H className='heading'>Access Chat</H>
       <Level>
         <ul>
-          <Auth />
+          <li>
+            <Link className='link' to='/messages'>
+              Messages
+            </Link>
+          </li>
         </ul>
+        <Auth />
       </Level>
     </nav>
   );
@@ -26,8 +33,13 @@ const navCss = css`
   ul {
     list-style: none;
   }
-  .heading {
+
+  .heading,
+  .link {
     font-size: 1.8rem;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
   }
 
   @media (min-width: 576px) {
