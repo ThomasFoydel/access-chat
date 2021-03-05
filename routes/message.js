@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-// const auth = require('../middlewares/auth');
+const auth = require('../middlewares/auth');
 const Message = require('../models/Message');
 
-router.post('/', async (req, res) => {
-  const { sender, receiver, content } = req.body;
-  // const sender = req.tokenUser.userId;
+router.post('/', auth, async (req, res) => {
+  const { receiver, content } = req.body;
+  const sender = req.tokenUser.userId;
 
   Message.create({ sender, receiver, content })
     .then((message) => res.status(201).send(message))

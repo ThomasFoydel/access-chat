@@ -81,6 +81,7 @@ router.post('/login', async (req, res) => {
         req.body.password,
         user.password
       );
+
       if (passwordsMatch) {
         const token = jwt.sign(
           {

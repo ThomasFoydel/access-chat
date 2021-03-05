@@ -10,7 +10,9 @@ mongoose.connect(process.env.TEST_DB, {
 
 before((done) => {
   mongoose.connection
-    .once('open', () => done())
+    .once('open', () => {
+      return done();
+    })
     .on('error', (err) => {
       console.log('db connection error: ', err);
     });
