@@ -119,8 +119,9 @@ describe('User routes', () => {
         .send(exampleRegisterData)
         .end((err, response) => {
           expect(response.statusCode).to.equal(201);
-          expect(response.body.email).to.equal(exampleRegisterData.email);
-          expect(response.body.name).to.equal(exampleRegisterData.name);
+          expect(response.body.user.email).to.equal(exampleRegisterData.email);
+          expect(response.body.user.name).to.equal(exampleRegisterData.name);
+          expect(response.body.token).to.exist;
           done();
         });
     });
@@ -130,16 +131,18 @@ describe('User routes', () => {
         .post('/api/user/register')
         .send(exampleRegisterData)
         .end(async (err, response) => {
+          const foundUser = await User.findById(response.body.user.id);
+
           const match = await bcrypt.compare(
             exampleRegisterData.password,
-            response.body.password
+            foundUser.password
           );
           expect(match);
           expect(response.statusCode).to.equal(201);
-          expect(response.body.password).to.not.equal(
+          expect(response.body.user.password).to.not.equal(
             exampleRegisterData.password
           );
-          expect(response.body.name).to.equal(exampleRegisterData.name);
+          expect(response.body.user.name).to.equal(exampleRegisterData.name);
           done();
         });
     });

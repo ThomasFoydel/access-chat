@@ -1,6 +1,19 @@
 import React from 'react';
 import { Input } from 'reakit/Input';
 
+const InputGroup = ({ props: { handleForm, form, inputs } }) => {
+  return inputs.map((input) => (
+    <FormInput
+      key={input.id}
+      props={{
+        input,
+        onChange: handleForm,
+        value: form[input.id],
+      }}
+    />
+  ));
+};
+
 const FormInput = ({
   props: {
     value,
@@ -24,19 +37,6 @@ const FormInput = ({
       />
     </>
   );
-};
-
-const InputGroup = ({ props: { handleForm, form, inputs } }) => {
-  return inputs.map((input) => (
-    <FormInput
-      key={input.id}
-      props={{
-        input,
-        onChange: handleForm,
-        value: form[input.id],
-      }}
-    />
-  ));
 };
 
 export default InputGroup;
