@@ -54,6 +54,9 @@ const registerCss = css`
   margin-left: 50%;
   transform: translateX(-50%);
   padding: 2rem 1rem;
+  position: absolute;
+  top: 7rem;
+  left: 0;
 
   .submit-btn {
     font-size: 2.5rem;
